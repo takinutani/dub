@@ -109,7 +109,7 @@ jobs:
         fi
 
     - name: '[Windows] Add VC toolset to PATH (DMD only)'
-      if: runner.os == 'Windows' && startsWith(runner.dc, 'dmd-')
+      if: runner.os == 'Windows' && ${{ env.DC }} == 'dmd'
       uses: ilammy/msvc-dev-cmd@v1
 
     - name: '[Windows] Test'
