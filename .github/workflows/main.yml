@@ -108,7 +108,8 @@ jobs:
           ./scripts/ci/ci.sh
         fi
 
-    - name: '[Windows] Add VC toolset to PATH'
+    - name: '[Windows] Add VC toolset to PATH (DMD only)'
+      if: runner.os == 'Windows' && startsWith(runner.dc, 'dmd-')
       uses: ilammy/msvc-dev-cmd@v1
 
     - name: '[Windows] Test'
