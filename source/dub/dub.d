@@ -212,7 +212,7 @@ class Dub {
 	 * generally in a library setup, one may wish to provide a custom
 	 * implementation, which can be done by overriding this method.
 	 */
-	protected PackageManager makePackageManager() const
+	protected PackageManager makePackageManager()
 	{
 		return new PackageManager(m_rootPath, m_dirs.userPackages, m_dirs.systemSettings, false);
 	}
@@ -368,15 +368,15 @@ class Dub {
 		import dub.test.base : TestDub;
 
 		scope (exit) environment.remove("DUB_REGISTRY");
-		auto dub = new TestDub(".", null, SkipPackageSuppliers.configured);
+		auto dub = new TestDub(null, ".", null, SkipPackageSuppliers.configured);
 		assert(dub.packageSuppliers.length == 0);
 		environment["DUB_REGISTRY"] = "http://example.com/";
-		dub = new TestDub(".", null, SkipPackageSuppliers.configured);
+		dub = new TestDub(null, ".", null, SkipPackageSuppliers.configured);
 		assert(dub.packageSuppliers.length == 1);
 		environment["DUB_REGISTRY"] = "http://example.com/;http://foo.com/";
-		dub = new TestDub(".", null, SkipPackageSuppliers.configured);
+		dub = new TestDub(null, ".", null, SkipPackageSuppliers.configured);
 		assert(dub.packageSuppliers.length == 2);
-		dub = new TestDub(".", [new RegistryPackageSupplier(URL("http://bar.com/"))], SkipPackageSuppliers.configured);
+		dub = new TestDub(null, ".", [new RegistryPackageSupplier(URL("http://bar.com/"))], SkipPackageSuppliers.configured);
 		assert(dub.packageSuppliers.length == 3);
 
 		dub = new TestDub();
@@ -1021,13 +1021,11 @@ class Dub {
 		{
 			import std.zip : ZipException;
 
-			auto path = getTempFile(name.main.toString(), ".zip");
-			supplier.fetchPackage(path, name.main, range, (options & FetchOptions.usePrerelease) != 0); // Q: continue on fail?
-			scope(exit) removeFile(path);
+			auto data = supplier.fetchPackage(name.main, range, (options & FetchOptions.usePrerelease) != 0); // Q: continue on fail?
 			logDiagnostic("Placing to %s...", location.toString());
 
 			try {
-				return m_packageManager.store(path, location, name.main, ver);
+				return m_packageManager.store(data, location, name.main, ver);
 			} catch (ZipException e) {
 				logInfo("Failed to extract zip archive for %s@%s...", name, ver);
 				// re-throw the exception at the end of the loop
@@ -1648,7 +1646,7 @@ class Dub {
 		import dub.test.base : TestDub;
 		import std.path: buildPath, absolutePath;
 
-		auto dub = new TestDub(".", null, SkipPackageSuppliers.configured);
+		auto dub = new TestDub(null, ".", null, SkipPackageSuppliers.configured);
 		immutable olddc = environment.get("DC", null);
 		immutable oldpath = environment.get("PATH", null);
 		immutable testdir = "test-determineDefaultCompiler";
