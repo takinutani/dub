@@ -108,6 +108,9 @@ jobs:
           ./scripts/ci/ci.sh
         fi
 
+    - name: '[Windows] Add VC toolset to PATH'
+      uses: ilammy/msvc-dev-cmd@v1
+
     - name: '[Windows] Test'
       if: runner.os == 'Windows'
       env:
