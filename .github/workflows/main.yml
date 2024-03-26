@@ -27,12 +27,12 @@ jobs:
     name: "Single sanity check"
     runs-on: ubuntu-latest
     steps:
-      - name: msvc-dev-cmd
-        uses: ilammy/msvc-dev-cmd@v1
       - name: Install latest DMD
         uses: dlang-community/setup-dlang@v1
       - name: Checkout
         uses: actions/checkout@v4
+      - name: msvc-dev-cmd
+        uses: ilammy/msvc-dev-cmd@v1
       - name: Run tests
         run: |
           # check for trailing whitespace
