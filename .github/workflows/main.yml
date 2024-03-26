@@ -31,7 +31,8 @@ jobs:
         uses: dlang-community/setup-dlang@v1
       - name: Checkout
         uses: actions/checkout@v4
-      - name: '[Windows] Add VC toolset to PATH'
+      - name: Windows Add VC toolset to PATH
+        if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
       - name: Run tests
         run: |
